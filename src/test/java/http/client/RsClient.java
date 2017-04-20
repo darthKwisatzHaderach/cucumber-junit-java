@@ -13,6 +13,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpDelete;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
@@ -37,9 +38,7 @@ public class RsClient {
         httppost.setEntity(new UrlEncodedFormEntity(params, "UTF-8"));
 
         //Execute and get the response.
-        HttpResponse response = httpclient.execute(httppost);
-        
-        return response;
+       return httpclient.execute(httppost);
     }
     
     public HttpResponse deleteUser(User user, String url)
@@ -48,8 +47,15 @@ public class RsClient {
         org.apache.http.client.HttpClient httpclient = HttpClients.createDefault();
         HttpDelete httpdelete = new HttpDelete(String.format(url, user.id));
         
-        HttpResponse response = httpclient.execute(httpdelete);
+        return httpclient.execute(httpdelete);
+    }
+    
+    public HttpResponse getUser(User user, String url)
+            throws UnsupportedEncodingException, IOException{
         
-        return response;
+        org.apache.http.client.HttpClient httpclient = HttpClients.createDefault();
+        HttpGet httpget = new HttpGet(String.format(url, user.id));
+        
+        return httpclient.execute(httpget);
     }
 }

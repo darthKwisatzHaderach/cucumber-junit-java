@@ -1,4 +1,4 @@
-Feature: Delete users from server
+Feature: Get users from server by ID
 
     Background: prepare user for scenario
         Given user with first name <f> and last name <l>
@@ -6,13 +6,14 @@ Feature: Delete users from server
         Then response should contains HTTP code 200
         And response should contains user ID
 
-    Scenario Outline: Send sync request to delete user from server
-        When HTTP client send sync DELETE request to delete user <f> <l> to "http://localhost:28080/rs/users/%d"
+    Scenario Outline: Get users from server by ID
+        When HTTP client send sync GET request with user <f> <l> ID to "http://localhost:28080/rs/users/%d"
         Then response should contains HTTP code 200
+        And response should contains user data from request
 
     Examples:
     | f         | l        |
-    | Ben       | Kenobi   |
-    | Luke      | Skywalker|
-    | Darth     | Vader    |
-    | Master    | Yoda     |
+    | Harry     | Potter   |
+    | Severus   | Snape    |
+    | Professor | Dambldor |
+    | Sirius    | Black    |
