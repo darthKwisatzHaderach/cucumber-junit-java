@@ -24,11 +24,11 @@ import support.User;
  */
 public class RsClient {
     
-    public HttpResponse postUserData(User user)
+    public HttpResponse postUserData(User user, String url)
             throws UnsupportedEncodingException, IOException{
         
         org.apache.http.client.HttpClient httpclient = HttpClients.createDefault();
-        HttpPost httppost = new HttpPost("http://localhost:28080/rs/users");
+        HttpPost httppost = new HttpPost(url);
 
         // Request parameters and other properties.
         List<NameValuePair> params = new ArrayList<NameValuePair>(2);
@@ -42,12 +42,11 @@ public class RsClient {
         return response;
     }
     
-    public HttpResponse deleteUser(User user)
+    public HttpResponse deleteUser(User user, String url)
             throws UnsupportedEncodingException, IOException{
         
         org.apache.http.client.HttpClient httpclient = HttpClients.createDefault();
-        HttpDelete httpdelete = new HttpDelete(
-            String.format("http://localhost:28080/rs/users/%d", user.id));
+        HttpDelete httpdelete = new HttpDelete(String.format(url, user.id));
         
         HttpResponse response = httpclient.execute(httpdelete);
         
