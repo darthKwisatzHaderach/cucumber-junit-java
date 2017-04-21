@@ -103,7 +103,7 @@ public class UsersOperationsSteps {
     @Then("^database should contains user from request$")
     public void database_should_contains_user_from_request() throws Throwable {
         dbClient = new DbClient();
-        //Для проверки записей в БД нужен другой тип БД
+        //Для проверки записей в БД нужен другой тип БД (не in-memmory)
         //Для данного типа нужно тесты в том же контейнере запускать
         //In order to access or view the embedded database, the particular “database manager tool” 
         //must start with the same Spring container or JVM, which started the embedded database. 
