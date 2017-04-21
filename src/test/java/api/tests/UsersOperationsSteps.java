@@ -10,6 +10,10 @@ import static org.hamcrest.CoreMatchers.containsString;
 import org.junit.Assert;
 import api.users.User;
 import db.client.DbClient;
+import java.util.ArrayList;
+import java.util.List;
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -39,7 +43,10 @@ public class UsersOperationsSteps {
     public void http_client_send_sync_post_request_with_information_about_user_to(
             String endpointUrl) throws Throwable {
         rsClient = new RsClient();
-        response = rsClient.postUserData(user, endpointUrl);
+        List<NameValuePair> params = new ArrayList<NameValuePair>(2);
+        params.add(new BasicNameValuePair("firstName", user.firstName));
+        params.add(new BasicNameValuePair("lastName", user.lastName));
+        response = rsClient.postUserData(user, endpointUrl, params);
         responseBody = EntityUtils.toString(response.getEntity());
     }
 
@@ -75,22 +82,34 @@ public class UsersOperationsSteps {
         responseBody = EntityUtils.toString(response.getEntity());
     }
     
-    @When("^HTTP client send sync PUT request to update user (.*) (.*) to (.*) (.*) on address \"([^\"]*)\"$")
-    public void http_client_send_sync_PUT_request_to_update_user_on_address(
-            String firstName, String lastName, String newFirstName, String newLastName, String endpointUrl) throws Throwable {
-        rsClient = new RsClient();
+    @Given("^user data was changed to (.*) (.*)$")
+    public void user_data_was_changed_to_Ray_Awakining(
+            String newFirstName, String newLastName) throws Throwable {
         user.setFirstName(newFirstName);
         user.setLastName(newLastName);
-        response = rsClient.updateUser(user, endpointUrl);
+    }
+    
+    @When("^HTTP client send sync PUT request to update user (.*) (.*) on \"([^\"]*)\"$")
+    public void http_client_send_sync_PUT_request_to_update_user_on_address(
+            String firstName, String lastName, String endpointUrl) throws Throwable {
+        rsClient = new RsClient();
+        List<NameValuePair> params = new ArrayList<NameValuePair>(2);
+        params.add(new BasicNameValuePair("firstName", user.firstName));
+        params.add(new BasicNameValuePair("lastName", user.lastName));
+        response = rsClient.updateUser(user, endpointUrl, params);
         responseBody = EntityUtils.toString(response.getEntity());
     }
     
     @Then("^database should contains user from request$")
     public void database_should_contains_user_from_request() throws Throwable {
         dbClient = new DbClient();
-        dbClient.createConnection();
-        dbClient.selectUsers(user);
-        dbClient.shutdown();
+        //Для проверки записей в БД нужен другой тип БД
+        //Для данного типа нужно тесты в том же контейнере запускать
+        //In order to access or view the embedded database, the particular “database manager tool” 
+        //must start with the same Spring container or JVM, which started the embedded database. 
+        //Furthermore, the “database manager tool” must start after the embedded database bean, 
+        //best resolve this by observing the Spring’s log to identify loading sequence of the beans.
+        //The “HSQL database manager” is a good tool, just start within the same Spring container.
     }
     
     private Integer getUserIdFromResponse(String responseBody){

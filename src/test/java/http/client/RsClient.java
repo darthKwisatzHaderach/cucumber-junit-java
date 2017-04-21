@@ -27,19 +27,14 @@ import api.users.User;
  */
 public class RsClient {
     
-    public HttpResponse postUserData(User user, String url)
+    public HttpResponse postUserData(User user, String url, List<NameValuePair> params)
             throws UnsupportedEncodingException, IOException{
         
         HttpClient httpclient = HttpClients.createDefault();
         HttpPost httpPost = new HttpPost(url);
 
-        // Request parameters and other properties.
-        List<NameValuePair> params = new ArrayList<NameValuePair>(2);
-        params.add(new BasicNameValuePair("firstName", user.firstName));
-        params.add(new BasicNameValuePair("lastName", user.lastName));
         httpPost.setEntity(new UrlEncodedFormEntity(params, "UTF-8"));
 
-        //Execute and get the response.
        return httpclient.execute(httpPost);
     }
     
@@ -61,15 +56,12 @@ public class RsClient {
         return httpclient.execute(httpGet);
     }
             
-    public HttpResponse updateUser(User user, String url)
+    public HttpResponse updateUser(User user, String url, List<NameValuePair> params)
             throws UnsupportedEncodingException, IOException{
         
         HttpClient httpclient = HttpClients.createDefault();
         HttpPut httpPut = new HttpPut(String.format(url, user.id));
         
-        List<NameValuePair> params = new ArrayList<NameValuePair>(2);
-        params.add(new BasicNameValuePair("firstName", user.firstName));
-        params.add(new BasicNameValuePair("lastName", user.lastName));
         httpPut.setEntity(new UrlEncodedFormEntity(params, "UTF-8"));
         
         return httpclient.execute(httpPut);
