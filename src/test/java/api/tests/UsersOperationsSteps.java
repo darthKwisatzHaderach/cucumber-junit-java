@@ -30,7 +30,7 @@ public class UsersOperationsSteps {
     private DbClient dbClient;
     
     @Given("^user with first name (.*) and last name (.*)")
-    public void entity_user_with_firstName_and_lastName(
+    public void user_with_firstName_and_lastName(
             String firstName, String lastName) throws Throwable {
         user = new User(null, firstName, lastName);
     }
@@ -87,9 +87,10 @@ public class UsersOperationsSteps {
     
     @Then("^database should contains user from request$")
     public void database_should_contains_user_from_request() throws Throwable {
-        DbClient.createConnection();
-        DbClient.selectUsers(user);
-        DbClient.shutdown();
+        dbClient = new DbClient();
+        dbClient.createConnection();
+        dbClient.selectUsers(user);
+        dbClient.shutdown();
     }
     
     private Integer getUserIdFromResponse(String responseBody){

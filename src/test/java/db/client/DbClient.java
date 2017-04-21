@@ -25,7 +25,7 @@ public class DbClient {
     private static Statement stmt = null;
 
    
-    public static void createConnection()
+    public void createConnection()
     {
         try
         {
@@ -39,7 +39,7 @@ public class DbClient {
         }
     }
     
-    public static void selectUsers(User user)
+    public void selectUsers(User user)
     {
         try
         {
@@ -73,7 +73,7 @@ public class DbClient {
         }
     }
     
-    public static void shutdown()
+    public void shutdown()
     {
         try
         {
