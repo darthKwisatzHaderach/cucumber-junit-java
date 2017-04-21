@@ -8,7 +8,8 @@ import org.apache.http.HttpResponse;
 import org.apache.http.util.EntityUtils;
 import static org.hamcrest.CoreMatchers.containsString;
 import org.junit.Assert;
-import support.User;
+import api.users.User;
+import db.client.DbClient;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -24,8 +25,9 @@ public class UsersOperationsSteps {
     
     private User user;
     private HttpResponse response;
-    private RsClient client;
     private String responseBody;
+    private RsClient rsClient;
+    private DbClient dbClient;
     
     @Given("^user with first name (.*) and last name (.*)")
     public void entity_user_with_firstName_and_lastName(
@@ -36,8 +38,8 @@ public class UsersOperationsSteps {
     @When("^HTTP client send sync POST request with information about user to \"([^\"]*)\"$")
     public void http_client_send_sync_post_request_with_information_about_user_to(
             String endpointUrl) throws Throwable {
-        client = new RsClient();
-        response = client.postUserData(user, endpointUrl);
+        rsClient = new RsClient();
+        response = rsClient.postUserData(user, endpointUrl);
         responseBody = EntityUtils.toString(response.getEntity());
     }
 
@@ -60,17 +62,34 @@ public class UsersOperationsSteps {
     @When("^HTTP client send sync DELETE request to delete user (.*) (.*) to \"([^\"]*)\"$")
     public void http_client_send_sync_delete_request_to_delete_user_f_l_to(
         String firstName, String lastName, String endpointUrl) throws Throwable {
-        client = new RsClient();
-        response = client.deleteUser(user, endpointUrl);
+        rsClient = new RsClient();
+        response = rsClient.deleteUser(user, endpointUrl);
         responseBody = EntityUtils.toString(response.getEntity());
     }
     
     @When("^HTTP client send sync GET request with user (.*) (.*) ID to \"([^\"]*)\"$")
     public void http_client_send_sync_GET_request_with_user_ID_to(
             String firstName, String lastName, String endpointUrl) throws Throwable {
-        client = new RsClient();
-        response = client.getUser(user, endpointUrl);
+        rsClient = new RsClient();
+        response = rsClient.getUser(user, endpointUrl);
         responseBody = EntityUtils.toString(response.getEntity());
+    }
+    
+    @When("^HTTP client send sync PUT request to update user (.*) (.*) to (.*) (.*) on address \"([^\"]*)\"$")
+    public void http_client_send_sync_PUT_request_to_update_user_on_address(
+            String firstName, String lastName, String newFirstName, String newLastName, String endpointUrl) throws Throwable {
+        rsClient = new RsClient();
+        user.setFirstName(newFirstName);
+        user.setLastName(newLastName);
+        response = rsClient.updateUser(user, endpointUrl);
+        responseBody = EntityUtils.toString(response.getEntity());
+    }
+    
+    @Then("^database should contains user from request$")
+    public void database_should_contains_user_from_request() throws Throwable {
+        DbClient.createConnection();
+        DbClient.selectUsers(user);
+        DbClient.shutdown();
     }
     
     private Integer getUserIdFromResponse(String responseBody){

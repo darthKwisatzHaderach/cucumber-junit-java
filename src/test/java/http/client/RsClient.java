@@ -11,13 +11,15 @@ import java.util.ArrayList;
 import java.util.List;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpPut;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
-import support.User;
+import api.users.User;
 
 /**
  *
@@ -28,34 +30,48 @@ public class RsClient {
     public HttpResponse postUserData(User user, String url)
             throws UnsupportedEncodingException, IOException{
         
-        org.apache.http.client.HttpClient httpclient = HttpClients.createDefault();
-        HttpPost httppost = new HttpPost(url);
+        HttpClient httpclient = HttpClients.createDefault();
+        HttpPost httpPost = new HttpPost(url);
 
         // Request parameters and other properties.
         List<NameValuePair> params = new ArrayList<NameValuePair>(2);
         params.add(new BasicNameValuePair("firstName", user.firstName));
         params.add(new BasicNameValuePair("lastName", user.lastName));
-        httppost.setEntity(new UrlEncodedFormEntity(params, "UTF-8"));
+        httpPost.setEntity(new UrlEncodedFormEntity(params, "UTF-8"));
 
         //Execute and get the response.
-       return httpclient.execute(httppost);
+       return httpclient.execute(httpPost);
     }
     
     public HttpResponse deleteUser(User user, String url)
             throws UnsupportedEncodingException, IOException{
         
-        org.apache.http.client.HttpClient httpclient = HttpClients.createDefault();
-        HttpDelete httpdelete = new HttpDelete(String.format(url, user.id));
+        HttpClient httpclient = HttpClients.createDefault();
+        HttpDelete httpDelete = new HttpDelete(String.format(url, user.id));
         
-        return httpclient.execute(httpdelete);
+        return httpclient.execute(httpDelete);
     }
     
     public HttpResponse getUser(User user, String url)
             throws UnsupportedEncodingException, IOException{
         
-        org.apache.http.client.HttpClient httpclient = HttpClients.createDefault();
-        HttpGet httpget = new HttpGet(String.format(url, user.id));
+        HttpClient httpclient = HttpClients.createDefault();
+        HttpGet httpGet = new HttpGet(String.format(url, user.id));
         
-        return httpclient.execute(httpget);
+        return httpclient.execute(httpGet);
+    }
+            
+    public HttpResponse updateUser(User user, String url)
+            throws UnsupportedEncodingException, IOException{
+        
+        HttpClient httpclient = HttpClients.createDefault();
+        HttpPut httpPut = new HttpPut(String.format(url, user.id));
+        
+        List<NameValuePair> params = new ArrayList<NameValuePair>(2);
+        params.add(new BasicNameValuePair("firstName", user.firstName));
+        params.add(new BasicNameValuePair("lastName", user.lastName));
+        httpPut.setEntity(new UrlEncodedFormEntity(params, "UTF-8"));
+        
+        return httpclient.execute(httpPut);
     }
 }

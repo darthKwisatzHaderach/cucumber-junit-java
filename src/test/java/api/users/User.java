@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package support;
+package api.users;
 
 /**
  *
@@ -23,5 +23,13 @@ public class User {
     
     public void setId(Integer id){
         this.id = id;
+    }
+    
+    public void setFirstName(String firstName){
+        this.firstName = firstName;
+    }
+        
+    public void setLastName(String lastName){
+        this.lastName = lastName;
     }
 }
